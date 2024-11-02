@@ -19,16 +19,16 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build MainPage --configuration Release
+        run: dotnet build MainPage/MyProject.csproj --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish MainPage -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish MainPage/MyProject.csproj -c Release -o ${{ runner.temp }}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{ runner.temp }}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -58,4 +58,4 @@ jobs:
         with:
           app-name: 'MitelksHome'
           slot-name: 'Production'
-          package: .
+          package: ${{ runner.temp }}/myapp
