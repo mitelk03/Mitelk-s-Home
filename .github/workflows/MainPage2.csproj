@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <style>
+        html {
+            overflow: hidden;
+        }
+        #gamec {
+            width: 100vw;
+        }
+    </style>
+</head>
+<body>
+    <h1>About Me</h1>
+    <p>Hello, my name is Mitelk. I am a student at Columbia Basin College.</p>
+    <p>I am currently working on my Software Development Bachelors Degree.</p>
+    <p>I am in my second year of my degree and currently doing an assignment for my network fundamentals class.<p>
+    <p>I am trying to make my own web page.<p>
+    <p>While I don’t know much about HTML at this current time this is the best I can do as far as making a web page.<p>
+
+    <h2>My Game</h2>
+    <canvas id="gamec" width="1920" height="1000"></canvas>
+    <script>
+        var gamec = document.getElementById("gamec");
+        var ctx = gamec.getContext("2d");
+        var player = {
+            x: 1920 / 2 - 10,
+            y: 1000 - 20,
+            w: 20,
+            h: 20,
+            dead: false
+        };
+
+        function Obstacle(x, y, w, h) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+            this.vl = [Math.random() * 10 - 5, Math.random() * 10 - 5];
+            this.out = false;
+        }
+
+        Obstacle.prototype.draw = function () {
+            ctx.fillStyle = "red";
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+        };
+
+        Obstacle.prototype.run = function () {
+            if ((
+                (this.x + this.w > player.x && this.x + this.w < player.x + player.w) ||
+                (player.x + player.w > this.x && player.x + player.w < this.x + this.w)
+            ) && (
+                (this.y + this.h > player.y && this.y + this.h < player.y + player.h) ||
+                (player.y + player.h > this.y && player.y + player.h < this.y + this.h)
+            )) player.dead = true;
+            this.x += this.vl[0];
+            this.y += this.vl[1];
+            if (this.x > 1920 || this.x + this.w < 0 || this.y > 1000 || this.y + this.h < 0) this.out = true;
+        };
+
+        Obstacle.obstacles = [];
+        Obstacle.run = function () {
+            for (let i = 0; i < Obstacle.obstacles.length; i++) {
+                let that = Obstacle.obstacles[i];
+                that.draw();
+                that.run();
+                if (that.out) {
+                    Obstacle.obstacles.splice(i, 1);
+                    i--;
+                }
+            }
+        };
+
+        var keys = {};
+        document.body.addEventListener("keydown", (e) => {
+            keys[e.code] = true;
+        });
+        document.body.addEventListener("keyup", (e) => {
+            keys[e.code] = false;
+        });
+
+        var frameCount = 0;
+        function draw() {
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, 1920, 1000);
+
+            ctx.fillStyle = "blue";
+            ctx.fillRect(player.x, player.y, player.w, player.h);
+            if (keys.KeyW) player.y -= 3;
+            if (keys.KeyS) player.y += 3;
+            if (keys.KeyA) player.x -= 3;
+            if (keys.KeyD) player.x += 3;
+
+            Obstacle.run();
+            if (frameCount % 10 === 0) {
+                let w = Math.random() * 10 + 5;
+                let h = Math.random() * 10 + 5;
+                Obstacle.obstacles.push(new Obstacle((1920 - w) / 2, (1000 - h) / 2, w, h));
+            }
+            if (player.dead) {
+                restartGame();
+            } else {
+                window.requestAnimationFrame(draw);
+            }
+            frameCount++;
+        }
+
+        function restartGame() {
+            player.x = 1920 / 2 - 10;
+            player.y = 1000 - 20;
+            player.dead = false;
+            Obstacle.obstacles = [];
+            frameCount = 0;
+            window.requestAnimationFrame(draw);
+        }
+
+        window.requestAnimationFrame(draw);
+    </script>
+</body>
+</html>
