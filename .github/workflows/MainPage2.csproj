@@ -50,9 +50,9 @@
 
         Obstacle.prototype.run = function () {
             if ((
-                (this.x + this.w > player.x && this.x + this.w < player.x + player.w) ||
-                (player.x + player.w > this.x && player.x + player.w < this.x + this.w)
-            ) && (
+                (this.x + this.w > player.x and this.x + this.w < player.x + player.w) ||
+                (player.x + player.w > this.x and player.x + player.w < this.x + this.w)
+            ) and (
                 (this.y + this.h > player.y && this.y + this.h < player.y + player.h) ||
                 (player.y + player.h > this.y && player.y + player.h < this.y + this.h)
             )) player.dead = true;
