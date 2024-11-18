@@ -53,8 +53,8 @@
                 (this.x + this.w > player.x and this.x + this.w < player.x + player.w) ||
                 (player.x + player.w > this.x and player.x + player.w < this.x + this.w)
             ) and (
-                (this.y + this.h > player.y && this.y + this.h < player.y + player.h) ||
-                (player.y + player.h > this.y && player.y + player.h < this.y + this.h)
+                (this.y + this.h > player.y and this.y + this.h < player.y + player.h) ||
+                (player.y + player.h > this.y and player.y + player.h < this.y + this.h)
             )) player.dead = true;
             this.x += this.vl[0];
             this.y += this.vl[1];
